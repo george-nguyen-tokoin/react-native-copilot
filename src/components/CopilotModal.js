@@ -59,6 +59,9 @@ class CopilotModal extends Component<Props, State> {
     labels: {},
     stopOnOutsideClick: false,
     arrowColor: '#fff',
+    arrowStyle: {
+      marginTop: 10
+    }
   };
 
   state = {
