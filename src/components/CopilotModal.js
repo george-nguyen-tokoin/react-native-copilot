@@ -276,12 +276,16 @@ class CopilotModal extends Component<Props, State> {
           },
         ]}
       >
-        <StepNumberComponent
-          isFirstStep={this.props.isFirstStep}
-          isLastStep={this.props.isLastStep}
-          currentStep={this.props.currentStep}
-          currentStepNumber={this.props.currentStepNumber}
-        />
+        {
+          StepNumberComponent && (
+            <StepNumberComponent
+              isFirstStep={this.props.isFirstStep}
+              isLastStep={this.props.isLastStep}
+              currentStep={this.props.currentStep}
+              currentStepNumber={this.props.currentStepNumber}
+            />
+          )
+        }
       </Animated.View>,
       <Animated.View key="arrow" style={[styles.arrow, this.state.arrow]} />,
       <Animated.View key="tooltip" style={[styles.tooltip, this.state.tooltip, this.props.tooltipStyle]}>
