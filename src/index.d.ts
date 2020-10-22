@@ -6,6 +6,7 @@ declare module 'react-native-copilot' {
     order: number;
     visible: boolean;
     target: ReactNode;
+    title: string;
     text: string;
     wrapper: ReactNode;
   };
