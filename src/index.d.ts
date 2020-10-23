@@ -38,9 +38,8 @@ declare module 'react-native-copilot' {
     verticalOffset?: number; // In order to adjust vertical position
     stopOnOutsideClick?: boolean; // Whether the tutorial should stop after clicking outside the step component
     arrowColor: string;
-    preventScroll: [];
+    minusScrollViewYOffset: number;
     wrapperStyle: any;
-    stopOnOutsideClick: boolean;
   };
 
   /**

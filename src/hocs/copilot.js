@@ -44,7 +44,7 @@ const copilot = ({
   verticalOffset = 0,
   wrapperStyle,
   arrowColor,
-  preventScroll
+  minusScrollViewYOffset = 0
 } = {}) =>
   (WrappedComponent) => {
     class Copilot extends Component<any, State> {
@@ -91,21 +91,12 @@ const copilot = ({
         this.eventEmitter.emit('stepChange', step);
 
         if (this.state.scrollView) {
-          const { scrollView } = this.state;
-
-          if (preventScroll && preventScroll.length !== 0) {
-            const currentStepName = this.state.currentStep.name;
-            const canScroll = await preventScroll.filter(x => x === currentStepName).length;
-
-            if (!canScroll.length) {
-              await this.state.currentStep.wrapper.measureLayout(
-                findNodeHandle(scrollView), (x, y, w, h) => {
-                  const yOffsett = y > 0 ? y - (h / 2) : 0;
-                  scrollView.scrollTo({ y: yOffsett, animated: false });
-                });
-            }
-          }
-          
+            const { scrollView } = this.state;
+            await this.state.currentStep.wrapper.measureLayout(
+              findNodeHandle(scrollView), (x, y, w, h) => {
+                const yOffsett = y > 0 ? y - (h / 2) : 0;
+                scrollView.scrollTo({ y: yOffsett - minusScrollViewYOffset, animated: false });
+              });
         }
         setTimeout(() => {
           if (move) {
@@ -190,14 +181,14 @@ const copilot = ({
       }
 
       async moveToCurrentStep(): void {
-        if (this.state.scrollView) {
-          await this.modal.animateMove({
-            width: size.width + OFFSET_WIDTH,
-            height: size.height + OFFSET_WIDTH,
-            left: size.x - (OFFSET_WIDTH / 2),
-            top: (size.y - (OFFSET_WIDTH / 2)) + verticalOffset,
-          });
-        }
+        const size = await this.state.currentStep.target.measure();
+
+        await this.modal.animateMove({
+          width: size.width + OFFSET_WIDTH,
+          height: size.height + OFFSET_WIDTH,
+          left: size.x - (OFFSET_WIDTH / 2),
+          top: (size.y - (OFFSET_WIDTH / 2)) + verticalOffset,
+        });
       }
 
       render() {
