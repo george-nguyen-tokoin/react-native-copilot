@@ -1,10 +1,11 @@
 // @flow
 import React, { Component } from 'react';
 
-import { View, Animated } from 'react-native';
+import { View, Animated, TouchableOpacity } from 'react-native';
 import styles from './style';
+import PropTypes from 'prop-types';
 
-import type { valueXY } from '../types';
+import type { CopilotContext, valueXY } from '../types';
 
 type Props = {
   size: valueXY,
@@ -28,10 +29,18 @@ type State = {
 };
 
 class ViewMask extends Component<Props, State> {
+  static contextTypes = {
+    _copilot: PropTypes.object,
+  }
+
   state = {
     size: new Animated.ValueXY({ x: 0, y: 0 }),
     position: new Animated.ValueXY({ x: 0, y: 0 }),
   };
+
+  context: {
+    _copilot: CopilotContext,
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.position !== this.props.position || prevProps.size !== this.props.size) {
@@ -115,6 +124,17 @@ class ViewMask extends Component<Props, State> {
               backgroundColor: this.props.backdropColor,
             },
           ]}
+        />
+        <TouchableOpacity
+          style={{
+            backgroundColor: 'transparent',
+            [start]: this.props.position.x,
+            [end]: (this.props.layout.width - (this.props.size.x + this.props.position.x)),
+            top: this.props.position.y,
+            width: this.props.size.x,
+            height: this.props.size.y,
+          }}
+          onPress={this.context._copilot.getCurrentStep().target.props.children.props.onPress || null}
         />
       </View>
     );
